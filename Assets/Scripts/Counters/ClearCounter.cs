@@ -1,0 +1,34 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using CustomInput;
+
+public class ClearCounter: BaseCounter
+{
+    public override void Interact(Player player)
+    {
+        if (!HasKitchenObject() && player.HasKitchenObject()) { 
+            player.GetKitchenObject().SetKitchenObjectParent(this); 
+        }else if(HasKitchenObject() && !player.HasKitchenObject())
+        {
+            GetKitchenObject().SetKitchenObjectParent(player);
+        }else if(HasKitchenObject() && player.HasKitchenObject())
+        {
+            if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+            {
+                if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                {
+                    GetKitchenObject().DestorySelf();
+                }
+            }else if(GetKitchenObject().TryGetPlate(out plateKitchenObject))
+            {
+                if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
+                {
+                    player.GetKitchenObject().DestorySelf();
+                }
+            }
+        }
+
+    }
+}
