@@ -1,10 +1,12 @@
 using CustomInput;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
+    public static event EventHandler OnDrop;
     [SerializeField] protected Transform topPoint;
 
     private KitchenObject kitchenObject;
@@ -28,6 +30,10 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     public virtual void SetKitchenObject(KitchenObject kitchenObject)
     {
         this.kitchenObject = kitchenObject;
+        if (kitchenObject != null)
+        {
+            OnDrop?.Invoke(this, EventArgs.Empty);
+        }
     }
     public virtual void ClearKitchenObject()
     {

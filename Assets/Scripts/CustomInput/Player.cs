@@ -8,7 +8,9 @@ namespace CustomInput
 {
     public class Player : MonoBehaviour ,IKitchenObjectParent
     {
+        public event EventHandler OnPick;
         public static Player Instance { get; private set; }
+        public bool isWalking;
 
         private const string IS_WALK = "isWalk";
 
@@ -52,6 +54,7 @@ namespace CustomInput
         private void Update()
         {
             MoveAndRotate();
+            isWalking = moveDir != Vector3.zero;
             SetAnimator();
             UpdateSelect();
         }
@@ -120,6 +123,10 @@ namespace CustomInput
         public void SetKitchenObject(KitchenObject kitchenObject)
         {
             this.kitchenObject = kitchenObject;
+            if(kitchenObject != null)
+            {
+                OnPick?.Invoke(this, EventArgs.Empty);
+            }
         }
         public void ClearKitchenObject()
         {
